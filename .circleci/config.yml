@@ -26,7 +26,7 @@ executors:
           password: $DOCKERHUB_PASSWORD
         environment:
           CONDUIT_SECRET: "something-really-secret"
-          FLASK_APP: /home/circleci/repo/autoapp.py
+          FLASK_APP: autoapp.py
           FLASK_DEBUG: 1
 
   docker-postgres-executor:
