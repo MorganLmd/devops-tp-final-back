@@ -75,6 +75,8 @@ jobs:
           command: |
             . venv/bin/activate
             sleep 1
+            flask db stamp head
+            flask db migrate
             flask db upgrade
             # flask test
       - save_cache_cmd
