@@ -49,7 +49,7 @@ executors:
       IMAGE_NAME: morganlmd/devops-tp-final-back-docker
       IMAGE_NAME_TMP: app
     docker:
-      - image: circleci/buildpack-deps:stretch
+      - image: docker:17.05.0-ce-git
 
 jobs:
   initial-build:
