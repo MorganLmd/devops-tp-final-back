@@ -53,7 +53,7 @@ executors:
 
 jobs:
   initial-build:
-    executor: my-executor
+    executor: docker-python-executor
     steps:
       - checkout
       - restore_cache_cmd
