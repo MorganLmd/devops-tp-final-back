@@ -1,11 +1,44 @@
 version: 2.1
+
+commands:
+  restore_cache_cmd:
+    description: "Restore cache from a previous workflow"
+    steps:
+      - restore_cache:
+          keys:
+            - deps1-{{ .Branch }}-{{ checksum "requirements/dev.txt" }}
+            - deps1-{{ .Branch }}-
+
+  save_cache_cmd:
+    description: "save cache with workflow new state"
+    steps:
+      - save_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements/dev.txt" }}
+          paths:
+            - "venv"
+
+executors:
+  my-executor:
+    docker:
+      - image: circleci/python:3.7.9-stretch
+        auth:
+          username: morganlmd
+          password: $DOCKERHUB_PASSWORD
+
 jobs:
   build:
-    docker:
-      - image: alpine:3.7
+    executor: my-executor
     steps:
+      - checkout
+      - restore_cache_cmd
       - run:
-          name: Test first step
+        name: setup environment and install python dependencies in a venv
+        environment:
+          CONDUIT_SECRET: "something-really-secret"
+          FLASK_APP: /home/circleci/repo/autoapp.py
+          FLASK_DEBUG: 1
           command: |
-            echo 'Hello world'
-            echo 'Test ajout projet circleci'
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements/dev.txt
+      - save_cache_cmd
