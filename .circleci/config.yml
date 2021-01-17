@@ -76,7 +76,6 @@ jobs:
             . venv/bin/activate
             sleep 1
             flask db stamp head
-            flask db init
             flask db migrate
             flask db upgrade
             flask test
