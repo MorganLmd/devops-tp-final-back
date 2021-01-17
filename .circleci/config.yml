@@ -73,9 +73,9 @@ jobs:
       - run:
           name: testing connection between database and backend
           command: |
-            python3 -m venv venv
             . venv/bin/activate
-            pip install -r requirements/dev.txt
+            sleep 1
+            flask db stamp head
             flask db init
             flask db migrate
             flask db upgrade
