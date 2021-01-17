@@ -18,27 +18,76 @@ commands:
             - "venv"
 
 executors:
-  my-executor:
+  docker-python-executor:
     docker:
       - image: circleci/python:3.7.9-stretch
         auth:
           username: morganlmd
           password: $DOCKERHUB_PASSWORD
+        environment:
+          CONDUIT_SECRET: "something-really-secret"
+          FLASK_APP: /home/circleci/repo/autoapp.py
+          FLASK_DEBUG: 1
+
+  docker-postgres-executor:
+    docker:
+      - image: circleci/python:3.7.9-stretch
+        auth:
+          username: morganlmd
+          password: $DOCKERHUB_PASSWORD
+        environment:
+          FLASK_CONFIG: testing
+          CONDUIT_SECRET: "something-really-secret"
+          FLASK_APP: /home/circleci/repo/autoapp.py
+          FLASK_DEBUG: 1
+          DATABASE_URL: postgresql://myUsr:somePwd@localhost:5432/myUsr
+
+      - image: circleci/postgres:9.6.5-alpine
+        auth:
+          username: morganlmd
+          password: $DOCKERHUB_PASSWORD
+        environment:
+          POSTGRES_USER: myUsr
+          POSTGRES_DB: myUsr
+          POSTGRES_PASSWORD: somePwd
 
 jobs:
-  build:
+  initial-build:
     executor: my-executor
     steps:
       - checkout
       - restore_cache_cmd
       - run:
           name: setup environment and install python dependencies in a venv
-          environment:
-            CONDUIT_SECRET: "something-really-secret"
-            FLASK_APP: /home/circleci/repo/autoapp.py
-            FLASK_DEBUG: 1
           command: |
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements/dev.txt
       - save_cache_cmd
+
+  setup-and-test-db:
+    executor: docker-postgres-executor
+    steps:
+      - checkout
+      - restore_cache_cmd
+      - run:
+          name: testing connection between database and backend
+          command: |
+            docker container run --name flask_db_test -e POSTGRES_PASSWORD=somePwd -e POSTGRES_USER=myUsr -p 5432:5432 -d postgres
+            sleep 1
+            export DATABASE_URL=postgresql://myUsr:somePwd@localhost:5432/myUsr
+            flask db upgrade
+            flask test
+            docker container stop flask_db_test
+            docker container rm flask_db_test
+            unset DATABASE_URL
+      - save_cache_cmd
+
+workflows:
+  version: 2
+  build-test-back-and-db:
+    jobs:
+      - initial-build
+      - setup-and-test-db:
+          requires:
+            - initial-build
