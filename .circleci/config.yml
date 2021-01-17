@@ -32,9 +32,6 @@ executors:
   docker-postgres-executor:
     docker:
       - image: circleci/python:3.7.9-stretch
-        auth:
-          username: morganlmd
-          password: $DOCKERHUB_PASSWORD
         environment:
           CONDUIT_SECRET: "something-really-secret"
           FLASK_APP: /home/circleci/repo/autoapp.py
@@ -42,9 +39,6 @@ executors:
           DATABASE_URL: postgresql://myUsr:somePwd@localhost:5432/myUsr
 
       - image: circleci/postgres:9.6.5-alpine
-        auth:
-          username: morganlmd
-          password: $DOCKERHUB_PASSWORD
         environment:
           POSTGRES_USER: myUsr
           POSTGRES_DB: myUsr
@@ -74,8 +68,6 @@ jobs:
           command: |
             . venv/bin/activate
             sleep 1
-            flask db stamp head
-            flask db migrate
             flask db upgrade
       - save_cache_cmd
 
