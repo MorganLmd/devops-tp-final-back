@@ -44,7 +44,6 @@ executors:
           POSTGRES_DB: myUsr
           POSTGRES_PASSWORD: somePwd
 
-  executors:
     dockerhub-publisher:
       environment:
         IMAGE_NAME: morganlmd/devops-tp-final-back-docker
