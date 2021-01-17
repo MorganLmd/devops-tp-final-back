@@ -73,14 +73,10 @@ jobs:
       - run:
           name: testing connection between database and backend
           command: |
-            docker container run --name flask_db_test -e POSTGRES_PASSWORD=somePwd -e POSTGRES_USER=myUsr -p 5432:5432 -d postgres
-            sleep 1
-            export DATABASE_URL=postgresql://myUsr:somePwd@localhost:5432/myUsr
+            flask db init
+            flask db migrate
             flask db upgrade
             flask test
-            docker container stop flask_db_test
-            docker container rm flask_db_test
-            unset DATABASE_URL
       - save_cache_cmd
 
 workflows:
