@@ -32,13 +32,13 @@ jobs:
       - checkout
       - restore_cache_cmd
       - run:
-        name: setup environment and install python dependencies in a venv
-        environment:
-          CONDUIT_SECRET: "something-really-secret"
-          FLASK_APP: /home/circleci/repo/autoapp.py
-          FLASK_DEBUG: 1
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements/dev.txt
+          name: setup environment and install python dependencies in a venv
+          environment:
+            CONDUIT_SECRET: "something-really-secret"
+            FLASK_APP: /home/circleci/repo/autoapp.py
+            FLASK_DEBUG: 1
+            command: |
+              python3 -m venv venv
+              . venv/bin/activate
+              pip install -r requirements/dev.txt
       - save_cache_cmd
