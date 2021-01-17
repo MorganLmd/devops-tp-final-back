@@ -44,12 +44,12 @@ executors:
           POSTGRES_DB: myUsr
           POSTGRES_PASSWORD: somePwd
 
-    dockerhub-publisher:
-      environment:
-        IMAGE_NAME: morganlmd/devops-tp-final-back-docker
-        IMAGE_NAME_TMP: app
-      docker:
-        - image: circleci/buildpack-deps:stretch
+  dockerhub-publisher:
+    environment:
+      IMAGE_NAME: morganlmd/devops-tp-final-back-docker
+      IMAGE_NAME_TMP: app
+    docker:
+      - image: circleci/buildpack-deps:stretch
 
 jobs:
   initial-build:
