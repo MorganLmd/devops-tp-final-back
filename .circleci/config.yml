@@ -92,7 +92,7 @@ jobs:
       - deploy:
           name: publishing docker image to dockerhub
           command: |
-            echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker login -e $DOCKERHUB_EMAIL -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PWD
             docker tag $IMAGE_NAME_TMP $IMAGE_NAME:$CIRCLE_BUILD_NUM
             docker tag $IMAGE_NAME_TMP $IMAGE_NAME:latest
             docker push $IMAGE_NAME:$CIRCLE_BUILD_NUM
