@@ -37,8 +37,8 @@ jobs:
             CONDUIT_SECRET: "something-really-secret"
             FLASK_APP: /home/circleci/repo/autoapp.py
             FLASK_DEBUG: 1
-            command: |
-              python3 -m venv venv
-              . venv/bin/activate
-              pip install -r requirements/dev.txt
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements/dev.txt
       - save_cache_cmd
