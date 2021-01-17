@@ -1,0 +1,11 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: alpine:3.7
+    steps:
+      - run:
+          name: Test first step
+          command: |
+            echo 'Hello world'
+            echo 'Test ajout projet circleci'
